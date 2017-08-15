@@ -16,7 +16,7 @@ public class SingleInstanceTest extends TestCase {
      * двойном подключении к одному порту
      */
     public void testSingleInstance() {
-        settings = new ClientSettings(new String[]{"1"});
+        settings = new ClientSettings();
 
         boolean isTwiceConnect = getTwiceConnect();
 

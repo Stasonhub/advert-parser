@@ -16,7 +16,6 @@ public class StorageFactory {
      * @throws AdParseException
      */
     public static Storage create(Settings settings) throws AdParseException {
-        // Создание парсера через рефлексию
         Storage instance;
         try {
             String domainName = settings.get(SettingsParam.STORAGE.toString());

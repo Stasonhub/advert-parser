@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>taximaxim.ru</groupId>
-    <artifactId>AvitoParser</artifactId>
-    <version>1.0</version>
+    <artifactId>advert-parser</artifactId>
+    <version>v.1</version>
     <build>
         <plugins>
             <plugin>
