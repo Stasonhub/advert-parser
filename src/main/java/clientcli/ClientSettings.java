@@ -24,10 +24,9 @@ public class ClientSettings extends HashMap<String, String> implements Settings 
      *
      * @throws Exception
      */
-    public ClientSettings(String[] cliArgs) {
+    public ClientSettings() {
         setDefaultSettings();
         setSettingFromConfig();
-        setSettingsFromCli(cliArgs);
     }
 
     public Stream<String> getObserversFromSettings() {
@@ -57,15 +56,14 @@ public class ClientSettings extends HashMap<String, String> implements Settings 
             findSettingsPath();
             setSettingsFromFile();
         } catch (AdParseException e) {
-            logger.warn("set settings from config error.", e);
+            logger.warn("config don't load.");
         }
     }
 
-    private void setSettingsFromCli(String[] cliArgs) {
-        if (cliArgs.length > 1) {
-            int lastEl = cliArgs.length - 1;
-            setSettingsFromStr(cliArgs[lastEl]);
-        }
+    public void setSettingsFromCli(String value) {
+
+        setSettingsFromStr(value);
+
     }
 
     private void findSettingsPath() {

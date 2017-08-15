@@ -1,6 +1,7 @@
 package clientcli;
 
 import api.*;
+import api.factories.ObserverFactory;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,22 @@ class CliApplication implements Runnable{
     private AdsParserFacade adsParserFacade;
     private CommandLine cmd;
     private CliParser cliParser;
+    private ClientSettings settings;
 
 
-    CliApplication(AdsParserFacade adsParserFacade, String[] args) throws ParseException {
+    CliApplication(ClientSettings settings, String[] args) throws ParseException {
         this.cliParser = new CliParser(args);
         this.cmd = cliParser.parse();
-        this.adsParserFacade = adsParserFacade;
+        this.settings = settings;
+        if(cmd.hasOption("s")){
+            settings.setSettingsFromCli(cmd.getOptionValue("s", ""));
+        }
+        try {
+            adsParserFacade = new AdsParserFacade(settings);
+        } catch (AdParseException e) {
+            logger.error("Facade init error", e);
+        }
+        addObservers();
     }
 
     @Override
@@ -100,5 +111,21 @@ class CliApplication implements Runnable{
     private void listProjects() throws AdParseException {
         adsParserFacade.listProjects()
                 .forEach(proj -> logger.info(proj.toString()));
+    }
+
+    /**
+     * подписывает наблюдателей
+     */
+    private void addObservers(){
+        settings.getObserversFromSettings()
+                .forEach(this::addObserver);
+    }
+
+    private void addObserver(String observerName){
+        try {
+            adsParserFacade.addObserver(ObserverFactory.create(settings, observerName));
+        } catch (AdParseException e) {
+            logger.warn("Observer create error. ",e);
+        }
     }
 }

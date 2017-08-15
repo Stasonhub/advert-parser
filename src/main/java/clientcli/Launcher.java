@@ -15,7 +15,6 @@ public class Launcher {
 
     private static Logger logger = LoggerFactory.getLogger(Launcher.class);
     private static ClientSettings settings;
-    private static AdsParserFacade adsParserFacade;
     private static String[] cliArgs;
 
     public static void main(String[] args) {
@@ -28,7 +27,7 @@ public class Launcher {
     }
 
     private static void startSingleInstanceCliApp() throws SingleInstanceException {
-        settings = new ClientSettings(cliArgs);
+        settings = new ClientSettings();
         SingleInstance singleInstanceSocket = new SingleInstance(settings);
         tryStartCliApp();
         singleInstanceSocket.socketClose();
@@ -39,32 +38,14 @@ public class Launcher {
     private static void tryStartCliApp() {
 
         try {
-            adsParserFacade = new AdsParserFacade(settings);
-            addObservers();
-            Runnable app = new CliApplication(adsParserFacade, cliArgs);
+            Runnable app = new CliApplication(settings, cliArgs);
             new Thread(app).start();
-        } catch (AdParseException e) {
-            logger.warn("Facade init error. ", e);
         } catch (ParseException e) {
             logger.info("This option is not existing try -h");
         }
     }
 
 
-    /**
-     * подписывает наблюдателей
-     */
-    private static void addObservers(){
-        settings.getObserversFromSettings()
-                .forEach(Launcher::addObserver);
-    }
 
-    private static void addObserver(String observerName){
-        try {
-            adsParserFacade.addObserver(ObserverFactory.create(settings, observerName));
-        } catch (AdParseException e) {
-            logger.warn("Observer create error. ",e);
-        }
-    }
 
 }

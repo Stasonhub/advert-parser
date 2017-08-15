@@ -76,7 +76,7 @@ public class FacadeTest extends TestCase {
         advert = new Advert(1, "title", 12121212, 12000, "avito.ru/moskow", "desc", project);
         adverts.add(advert);
         projects.add(project);
-        settings = new ClientSettings(new String[] {""});
+        settings = new ClientSettings();
 
     }
 
