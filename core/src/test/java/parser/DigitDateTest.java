@@ -2,7 +2,6 @@ package parser;
 
 import junit.framework.TestCase;
 import org.joda.time.DateTime;
-import parser.dateconverter.*;
 import parser.dateconverter.Avito;
 import parser.dateconverter.readers.DateConvertException;
 import parser.dateconverter.readers.DateReader;

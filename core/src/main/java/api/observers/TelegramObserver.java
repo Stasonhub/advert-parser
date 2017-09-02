@@ -2,11 +2,9 @@ package api.observers;
 
 import api.Advert;
 import api.AdvertEvent;
-import api.SettingsParam;
 import api.interfaces.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.List;

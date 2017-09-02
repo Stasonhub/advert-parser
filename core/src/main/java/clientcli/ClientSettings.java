@@ -37,7 +37,7 @@ public class ClientSettings extends HashMap<String, String> implements Settings 
 
     private void setDefaultSettings() {
         this.put(SettingsParam.STORAGE.toString(), "Pg");
-        this.put(SettingsParam.DB_PASSWORD.toString(), "");
+        this.put(SettingsParam.DB_PASSWORD.toString(), "postgres");
         this.put(SettingsParam.DB_LOGIN.toString(), "postgres");
         this.put(SettingsParam.PORT.toString(), "9999");
         this.put(SettingsParam.JDBC_URL.toString(), "jdbc:postgresql://localhost:5432/mydb");

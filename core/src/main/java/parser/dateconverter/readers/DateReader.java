@@ -1,8 +1,6 @@
 package parser.dateconverter.readers;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Класс парсит дату в строковом формате

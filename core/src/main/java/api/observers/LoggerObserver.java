@@ -2,7 +2,6 @@ package api.observers;
 
 import api.Advert;
 import api.AdvertEvent;
-import api.interfaces.Observer;
 import api.interfaces.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,5 @@
 package clientcli;
 
-import api.AdParseException;
-import api.AdsParserFacade;
-import api.factories.ObserverFactory;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

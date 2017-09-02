@@ -2,38 +2,33 @@ package parser;
 
 import junit.framework.TestCase;
 import org.joda.time.DateTime;
-import org.junit.Test;
+import parser.dateconverter.DateConverter;
 import parser.dateconverter.readers.DateConvertException;
-import parser.dateconverter.readers.DateReader;
-import parser.dateconverter.readers.DigitalDate;
-import parser.dateconverter.readers.MonthDate;
 
+/**
+ * Created by denisov_ae on 09.01.17.
+ */
+public class AdvertBoardDateTest  extends TestCase{
 
-public class MonthDateTest extends TestCase {
+    public void testAvito() throws DateConvertException {
+        DateConverter reader = new parser.dateconverter.Avito("Сегодня 12:12");
 
-    public void testDayMonth() throws DateConvertException {
+        long parseDate = reader.getDateInMillis();
 
-        DateReader reader = new MonthDate("12 декабря 12:12");
-
-        long parseDate = reader.getMillis();
         DateTime date = new DateTime();
         date = date
-                .withMonthOfYear(12)
-                .withDayOfMonth(12)
                 .withHourOfDay(12)
                 .withMinuteOfHour(12)
                 .withSecondOfMinute(0)
                 .withMillisOfSecond(0);
-
-
         assertEquals(date.getMillis(), parseDate);
-
     }
 
-    public void testDayMonthYear() throws DateConvertException {
-        DateReader reader = new MonthDate("12 декабря 2012");
+    public void testDrom() throws DateConvertException {
+        DateConverter reader = new parser.dateconverter.Drom("12-12-12");
 
-        long parseDate = reader.getMillis();
+        long parseDate = reader.getDateInMillis();
+
         DateTime date = new DateTime();
         date = date
                 .withYear(2012)
@@ -43,9 +38,6 @@ public class MonthDateTest extends TestCase {
                 .withMinuteOfHour(0)
                 .withSecondOfMinute(0)
                 .withMillisOfSecond(0);
-
-
         assertEquals(date.getMillis(), parseDate);
     }
-
 }
