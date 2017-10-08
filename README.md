@@ -85,7 +85,7 @@ OBSERVERS=Logger/Telegram
 
 * Переходим в корень проекта.
 * mvn package
-* java -cp target/AvitoParser-1.0.jar clientcli.Launcher -h
+* java -cp target/advert-parser-v.1.jar clientcli.Launcher -h
 * Вызов предыдущей команды выведет список команд для работы с приложением.
 * Параметр settings, присутствующий в командах - это поле для передачи настроек 
 вида(DB_PASSWORD=123, DB_LOGIN=yourLogin), данное поле можно исп вместо настройки 
