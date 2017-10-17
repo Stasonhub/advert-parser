@@ -19,24 +19,35 @@ public class ParserServlet extends HttpServlet {
 
     private AdsParserFacade adsParserFacade;
 
+    private WebObserver observer;
     private static final long serialVersionUID = 1L;
     public ParserServlet() {
         super();
+        try {
+            ClientSettings settings = new ClientSettings();
+            adsParserFacade = new AdsParserFacade(settings);
+            observer = new WebObserver();
+            adsParserFacade.addObserver(observer);
+        } catch (AdParseException e) {
+            e.printStackTrace();
+        }
     }
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-
+        response.setContentType("application/json;charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
         try {
             if(path.contains("/list")){
-                doList(response);
+                doProjs(request, response);
             }else if(path.contains("/run")){
                 doParsing(response);
             }else{
                 response.getWriter().println("404");
             }
-        } catch (AdParseException e) {
+        } catch (Exception e) {
             response.getWriter().println("error -_-");
             e.printStackTrace();
         }
@@ -47,12 +58,13 @@ public class ParserServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    protected void doList(HttpServletResponse response)
-            throws UnsupportedEncodingException, IOException, AdParseException {
-        response.setContentType("application/json;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        ClientSettings settings = new ClientSettings();
-        adsParserFacade = new AdsParserFacade(settings);
+    private void doProjs(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        String name = request.getParameter("name");
+        String url = request.getParameter("url");
+        if(!name.isEmpty() && !url.isEmpty()){
+            adsParserFacade.createProject(new Project(0,name,url,true));
+            response.getWriter().println("Project created.");
+        }
         Stream<Project> projs = adsParserFacade.listProjects();
         JSONArray jsonArray = new JSONArray();
         projs.forEach(p -> {
@@ -65,15 +77,10 @@ public class ParserServlet extends HttpServlet {
         response.getWriter().println(jsonArray);
     }
 
-    protected void doParsing(HttpServletResponse response)
+    private void doParsing(HttpServletResponse response)
             throws UnsupportedEncodingException, IOException, AdParseException {
-        response.setContentType("application/json;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        ClientSettings settings = new ClientSettings();
-        adsParserFacade = new AdsParserFacade(settings);
-        WebObserver ob = new WebObserver(response);
-        adsParserFacade.addObserver(ob);
         adsParserFacade.runParsing();
-        ob.print();
+        response.getWriter().println(observer.getObj());
     }
+
 }

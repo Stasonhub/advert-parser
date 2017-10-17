@@ -12,12 +12,9 @@ import java.util.List;
 
 public class WebObserver implements Observer{
 
-    private HttpServletResponse response;
     private JSONObject obj = new JSONObject();
 
-    public WebObserver(HttpServletResponse response) {
-        this.response = response;
-    }
+
 
     @Override
     public void update(List<Advert> ad, AdvertEvent type) {
@@ -26,8 +23,10 @@ public class WebObserver implements Observer{
         obj.put(type.toString(), array);
     }
 
-    public void print() throws IOException {
-        response.getWriter().println(obj);
+    public JSONObject getObj() throws IOException {
+        JSONObject tmp = obj;
+        obj = new JSONObject();
+        return tmp;
 
     }
 }
