@@ -1,6 +1,8 @@
 package api;
 
 
+import org.json.JSONObject;
+
 public class Project {
 
 
@@ -51,5 +53,13 @@ public class Project {
     @Override
     public String toString() {
         return id+". "+name+" -"+url;
+    }
+
+    public JSONObject toJSON(){
+        JSONObject obj = new JSONObject();
+        obj.put("id", getId());
+        obj.put("name", getName());
+        obj.put("url", getUrl());
+        return obj;
     }
 }

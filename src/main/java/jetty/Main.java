@@ -14,7 +14,7 @@ public class Main {
         context.setContextPath("/");
 
         // http://localhost:8082/func
-        context.addServlet(new ServletHolder(new ParserServlet()), "/func/*");
+        context.addServlet(new ServletHolder(new ParserServlet()), "/parser/*");
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { context });

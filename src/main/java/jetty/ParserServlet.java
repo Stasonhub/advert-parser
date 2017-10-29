@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ParserServlet extends HttpServlet {
@@ -21,6 +23,7 @@ public class ParserServlet extends HttpServlet {
 
     private WebObserver observer;
     private static final long serialVersionUID = 1L;
+
     public ParserServlet() {
         super();
         try {
@@ -40,16 +43,24 @@ public class ParserServlet extends HttpServlet {
         response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         try {
-            if(path.contains("/list")){
-                doProjs(request, response);
-            }else if(path.contains("/run")){
+            if (path.contains("/projects")) {
+                doApiProjects(request, response);
+            } else if (path.contains("/run")) {
                 doParsing(response);
-            }else{
+            } else {
                 response.getWriter().println("404");
             }
         } catch (Exception e) {
-            response.getWriter().println("error -_-");
-            e.printStackTrace();
+            response.sendError(404,"something wrong -_-");
+        }
+    }
+
+    private void doApiProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String[] arPath = request.getRequestURI().split("/");
+        if (arPath.length == 4) {
+            doProject(request, response);
+        } else {
+            doProjs(request, response);
         }
     }
 
@@ -58,23 +69,34 @@ public class ParserServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    private void doProjs(HttpServletRequest request,HttpServletResponse response) throws Exception {
+    private void doCreateProj(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String name = request.getParameter("name");
         String url = request.getParameter("url");
-        if(!name.isEmpty() && !url.isEmpty()){
-            adsParserFacade.createProject(new Project(0,name,url,true));
+        if (!name.isEmpty() && !url.isEmpty()) {
+            adsParserFacade.createProject(new Project(0, name, url, true));
             response.getWriter().println("Project created.");
         }
+    }
+
+    private void doProjs(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Stream<Project> projs = adsParserFacade.listProjects();
         JSONArray jsonArray = new JSONArray();
-        projs.forEach(p -> {
-            JSONObject proj = new JSONObject();
-            proj.put("id", p.getId());
-            proj.put("name", p.getName());
-            proj.put("url", p.getUrl());
-            jsonArray.put(proj);
-        });
+        projs.forEach(p -> jsonArray.put(p.toJSON()));
         response.getWriter().println(jsonArray);
+    }
+
+    private void doProject(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String path = request.getRequestURI();
+        int id = Integer.parseInt(path.split("/")[3]);
+        Stream<Project> projs = adsParserFacade.listProjects();
+        List<Project> projWithId = projs.filter(p -> p.getId() == id).collect(Collectors.toList());
+        if(projWithId.isEmpty()){
+            response.sendError(203,"id not find");
+        }else{
+            Project resProj = projWithId.get(0);
+            response.getWriter().println(resProj.toJSON());
+        }
+
     }
 
     private void doParsing(HttpServletResponse response)
